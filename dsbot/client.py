@@ -15,14 +15,14 @@ import inspect
 import logging
 import re
 
-import slack
+import slack_sdk.rtm
 
 from . import util
 
 logger = logging.getLogger(__name__)
 
 
-class BotClient(slack.RTMClient):
+class BotClient(slack_sdk.rtm.RTMClient):
     user_id = None
     _commands = []
 

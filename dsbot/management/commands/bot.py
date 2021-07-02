@@ -30,6 +30,6 @@ class Command(BaseCommand):
             except ImportError:
                 logging.exception("Error loading %s", entry)
             else:
-                logging.debug("Loaded %s", entry)
+                logging.info("Loaded %s", entry)
 
         BotClient(token=token).start()
