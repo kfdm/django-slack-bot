@@ -9,4 +9,4 @@ build: .venv
 
 .PHONY:	check
 check:
-	twine check dist/sdbot*.tar.gz
+	twine check dist/*.tar.gz
