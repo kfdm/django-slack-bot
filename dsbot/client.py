@@ -16,6 +16,7 @@ import logging
 import re
 
 import slack_sdk.rtm
+import slack_sdk.web
 
 from . import util
 
@@ -92,7 +93,7 @@ class BotClient(slack_sdk.rtm.RTMClient):
 
     def _cmd_in_thread(self, callback, **kwargs):
         """Execute the callback in another thread. Wait for and return the results."""
-        web_client = slack.WebClient(
+        web_client = slack_sdk.web.WebClient(
             token=self.token,
             base_url=self.base_url,
             ssl=self.ssl,
