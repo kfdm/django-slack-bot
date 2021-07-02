@@ -31,6 +31,7 @@ class BotClient(slack.RTMClient):
         """A decorator to store and link a callback to an event."""
 
         def decorator(callback):
+            logger.debug("Registering %s %s", key, callback)
             cls._validate_callback(callback)
             cls._commands.append(
                 {

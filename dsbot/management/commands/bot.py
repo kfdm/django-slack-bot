@@ -1,5 +1,7 @@
 import logging
 
+from pkg_resources import working_set
+
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
@@ -21,5 +23,13 @@ class Command(BaseCommand):
                 3: logging.DEBUG,
             }.get(verbosity)
         )
+
+        for entry in working_set.iter_entry_points("dsbot.commands"):
+            try:
+                entry.load()
+            except ImportError:
+                logging.exception("Error loading %s", entry)
+            else:
+                logging.debug("Loaded %s", entry)
 
         BotClient(token=token).start()
