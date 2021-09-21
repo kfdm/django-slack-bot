@@ -77,7 +77,7 @@ class BotClient(slack_sdk.rtm.RTMClient):
                         ],
                     )
                 except Exception as e:
-                    logger.error("Unknown Error")
+                    logger.exception("Unknown Error")
                     return self._web_client.chat_postEphemeral(
                         as_user=True,
                         channel=data["channel"],
