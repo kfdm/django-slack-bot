@@ -1,4 +1,4 @@
-from slack.errors import SlackApiError
+from slack_sdk.errors import SlackApiError
 
 
 class BaseException(Exception):
@@ -11,6 +11,9 @@ class CommandError(BaseException):
 
 class ArgumentError(CommandError):
     pass
+
+
+# Custom slack exceptions
 
 
 class ArchiveException(SlackApiError):

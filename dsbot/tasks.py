@@ -2,8 +2,8 @@ from __future__ import absolute_import
 
 import logging
 
-import slack
 from celery import shared_task
+from slack_sdk.web.client import WebClient
 
 from . import exceptions
 
@@ -11,7 +11,7 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-client = slack.WebClient(token=settings.SLACK_TOKEN)
+client = WebClient(token=settings.SLACK_TOKEN)
 
 
 # Since we typically deploy 2 workers and we don't want to go too
