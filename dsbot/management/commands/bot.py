@@ -13,8 +13,9 @@ logging.basicConfig(level=logging.WARNING)
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--token", default=settings.SLACK_TOKEN, help="Slack token")
+        parser.add_argument("--eager", action="store_true")
 
-    def handle(self, verbosity, token, **options):
+    def handle(self, verbosity, token, eager, **options):
         logging.root.setLevel(
             {
                 0: logging.ERROR,
@@ -32,4 +33,5 @@ class Command(BaseCommand):
             else:
                 logging.info("Loaded %s", entry)
 
-        BotClient(token=token).start()
+        with override_settings(CELERY_TASK_ALWAYS_EAGER=eager):
+            BotClient(token=token).start()
