@@ -4,6 +4,7 @@ from pkg_resources import working_set
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.test import override_settings
 
 from dsbot.client import BotClient
 
