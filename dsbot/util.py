@@ -2,7 +2,7 @@ import logging
 import re
 
 MENTION_REGEX = re.compile("^<@(|[WU].+?)>(.*)")
-LINK_REGEX = re.compile("<(http.*?)(\|.*?)?>", re.DOTALL)
+LINK_REGEX = re.compile(r"<(http.*?)(\|.*?)?>", re.DOTALL)
 
 logger = logging.getLogger(__name__)
 
