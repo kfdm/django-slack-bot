@@ -18,7 +18,7 @@ import re
 import slack_sdk.rtm
 import slack_sdk.web
 
-from . import util
+from .exceptions import CommandError
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +62,7 @@ class BotClient(slack_sdk.rtm.RTMClient):
                     else:
                         logger.debug("Running %(key)s %(func)s as thread", cmd)
                         self._cmd_in_thread(cmd["func"], data=data, match=match)
-                except util.CommandError as e:
+                except CommandError as e:
                     logger.warning("Command Error")
                     return self._web_client.chat_postEphemeral(
                         as_user=True,
