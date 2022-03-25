@@ -1,11 +1,13 @@
 PYTHON_BIN := .venv/bin/python
+PIP_BIN := .venv/bin/pip
 
 .PHONY: build
-build: .venv
-	$(PYTHON_BIN) setup.py sdist
+build: $(PYTHON_BIN)
+	$(PYTHON_BIN) setup.py sdist bdist_wheel
 
-.venv:
+$(PYTHON_BIN):
 	python3 -m venv .venv
+	$(PIP_BIN) install wheel
 
 .PHONY:	check
 check:
