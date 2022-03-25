@@ -7,10 +7,6 @@ LINK_REGEX = re.compile(r"<(http.*?)(\|.*?)?>", re.DOTALL)
 logger = logging.getLogger(__name__)
 
 
-class CommandError(Exception):
-    pass
-
-
 def parse_direct_mention(message_text):
     """
     Finds a direct mention (a mention that is at the beginning) in message text
