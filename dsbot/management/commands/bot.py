@@ -13,10 +13,15 @@ logging.basicConfig(level=logging.WARNING)
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
-        parser.add_argument("--token", default=settings.SLACK_TOKEN, help="Slack token")
-        parser.add_argument("--eager", action="store_true")
+        slack = parser.add_argument_group("Slack arguments")
+        slack.add_argument("--token", default=settings.SLACK_TOKEN, help="Slack token")
+        slack.add_argument("--timeout", default=30, type=int)
+        slack.add_argument("--ping-interval", default=30, type=int)
 
-    def handle(self, verbosity, token, eager, **options):
+        celery = parser.add_argument_group("Celery Arguments")
+        celery.add_argument("--eager", action="store_true")
+
+    def handle(self, verbosity, eager, **options):
         logging.root.setLevel(
             {
                 0: logging.ERROR,
@@ -35,4 +40,8 @@ class Command(BaseCommand):
                 logging.info("Loaded %s", entry)
 
         with override_settings(CELERY_TASK_ALWAYS_EAGER=eager):
-            BotClient(token=token).start()
+            BotClient(
+                token=options["token"],
+                timeout=options["timeout"],
+                ping_interval=options["ping_interval"],
+            ).start()
