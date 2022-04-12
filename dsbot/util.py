@@ -23,3 +23,27 @@ def parse_links(message_text):
     for m in LINK_REGEX.findall(message_text):
         logger.debug("Found match %s", m)
         yield m[0]
+
+
+def extract_text(message):
+    print(message)
+    if 'blocks' in message:
+        def _element(element):
+            for e in element['elements']:
+                if 'text' in e:
+                    yield e['text']
+                else:
+                    yield str(e)
+            
+        def _blocks(blocks):
+            for block in blocks:
+                if "text" in block:
+                    yield block["text"]["text"]
+                elif block['type'] == 'rich_text':
+                    for element in block['elements']:
+                        yield ' '.join(_element(block['elements']))
+
+        return '\n'.join(_blocks(message['blocks']))
+
+    else:
+        return message['text']
