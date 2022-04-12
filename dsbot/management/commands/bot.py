@@ -6,7 +6,6 @@ from django.test import override_settings
 
 from dsbot.client import BotClient
 
-logging.basicConfig(level=logging.WARNING)
 try:
     from importlib.metadata import entry_points
 except ImportError:
@@ -32,6 +31,12 @@ class Command(BaseCommand):
                 3: logging.DEBUG,
             }.get(verbosity)
         )
+
+        ch = logging.StreamHandler()
+        formatter = logging.Formatter(logging.BASIC_FORMAT)
+        ch.setFormatter(formatter)
+
+        logging.root.addHandler(ch)
 
         for entry in entry_points(group="dsbot.commands"):
             try:
