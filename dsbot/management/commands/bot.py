@@ -1,7 +1,5 @@
 import logging
 
-from pkg_resources import working_set
-
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.test import override_settings
@@ -9,6 +7,10 @@ from django.test import override_settings
 from dsbot.client import BotClient
 
 logging.basicConfig(level=logging.WARNING)
+try:
+    from importlib.metadata import entry_points
+except ImportError:
+    from importlib_metadata import entry_points
 
 
 class Command(BaseCommand):
@@ -31,7 +33,7 @@ class Command(BaseCommand):
             }.get(verbosity)
         )
 
-        for entry in working_set.iter_entry_points("dsbot.commands"):
+        for entry in entry_points(group="dsbot.commands"):
             try:
                 entry.load()
             except ImportError:
