@@ -21,13 +21,8 @@ TASK_RATE_LIMIT = getattr(settings, "SLACK_RATE_LIMIT", 0.5)
 
 # Wrapped version of Slack API Calll
 # We want to make it easy to rate limit our calls to slack by wrapping
-# it as a shared_task. We also typically want to ignore the results
-# since we don't care about having them saved to the backend
-#
-# In some cases we do want to call this directly (to centralize our
-# error check) so we still return data (for calling directly) even if
-# we set ignore_result
-@shared_task(rate_limit=TASK_RATE_LIMIT, ignore_result=True)
+# it as a shared_task.
+@shared_task(rate_limit=TASK_RATE_LIMIT)
 def api_call(*args, **kwargs):
     try:
         return client.api_call(*args, json=kwargs)
