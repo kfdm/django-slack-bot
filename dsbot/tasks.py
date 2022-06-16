@@ -25,7 +25,7 @@ TASK_RATE_LIMIT = getattr(settings, "SLACK_RATE_LIMIT", 0.5)
 @shared_task(rate_limit=TASK_RATE_LIMIT)
 def api_call(*args, **kwargs):
     try:
-        return client.api_call(*args, json=kwargs)
+        return client.api_call(*args, json=kwargs).data
     except exceptions.SlackApiError as e:
         if e.response.data["error"] == "channel_not_found":
             raise exceptions.ChannelNotFound(
