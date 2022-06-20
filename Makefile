@@ -11,6 +11,7 @@ $(APP_BIN): $(PYTHON_BIN)
 
 .PHONY: build
 build: $(PYTHON_BIN)
+	git clean -dxf build
 	$(PYTHON_BIN) setup.py sdist bdist_wheel
 
 $(PYTHON_BIN):
@@ -20,3 +21,7 @@ $(PYTHON_BIN):
 .PHONY:	check
 check:
 	twine check dist/*.tar.gz
+
+.PHONY: clean
+clean:
+	git clean -dxf dist build
