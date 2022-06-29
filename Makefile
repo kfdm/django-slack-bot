@@ -4,7 +4,7 @@ APP_BIN := .venv/bin/example-bot
 
 .PHONY: test
 test: $(APP_BIN)
-	$(APP_BIN) test
+	$(APP_BIN) test $(TEST_FLAGS)
 
 $(APP_BIN): $(PYTHON_BIN)
 	$(PIP_BIN) install -e .[example]
