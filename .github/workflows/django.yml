@@ -1,25 +1,38 @@
-name: Django CI
-
+name: Run Django Tests
 on:
   push:
-    branches: [ master ]
+    branches: ["master"]
   pull_request:
-    branches: [ master ]
+    branches: ["master"]
 
 jobs:
-  build:
-
+  test:
+    name: Run Django Tests
     runs-on: ubuntu-latest
+
     strategy:
-      max-parallel: 4
+      fail-fast: false
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        # https://endoflife.date/python
+        python-version: ["3.8", "3.9", "3.10"]
+        # https://endoflife.date/django
+        django-version: ["3.2", "4.0", "4.1b1"]
+        include:
+          - python-version: "3.6"
+            django-version: "3.2"
+          - python-version: "3.7"
+            django-version: "3.2"
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Run Tests
-      run: TEST_FLAGS="-v 2" make test
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          cache: "pip"
+          cache-dependency-path: "setup.cfg"
+          python-version: ${{ matrix.python-version }}
+
+      - run: pip install -U pip wheel
+      - run: pip install django==${{ matrix.django-version }} -e .
+
+      - name: Run tests
+        run: python -m tests.example -v 2

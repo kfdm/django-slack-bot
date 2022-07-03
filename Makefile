@@ -1,27 +1,21 @@
-PYTHON_BIN := .venv/bin/python
+APP_BIN := .venv/bin/django-admin
 PIP_BIN := .venv/bin/pip
-APP_BIN := .venv/bin/example-bot
+PYTHON_BIN := .venv/bin/python
 
-.PHONY: test
-test: $(APP_BIN)
-	$(APP_BIN) test $(TEST_FLAGS)
+.PHONY:	test build check clean
+.DEFAULT: test
 
-$(APP_BIN): $(PYTHON_BIN)
-	$(PIP_BIN) install -e .[example]
+test: ${APP_BIN}
+	${PYTHON_BIN} -m tests.example -v 2
 
-.PHONY: build
-build: $(PYTHON_BIN)
-	git clean -dxf build
-	$(PYTHON_BIN) setup.py sdist bdist_wheel
-
-$(PYTHON_BIN):
+$(PIP_BIN):
 	python3 -m venv .venv
-	$(PIP_BIN) install wheel
 
-.PHONY:	check
-check:
-	twine check dist/*.tar.gz
+${APP_BIN}: $(PIP_BIN)
+	${PIP_BIN} install -e .
 
-.PHONY: clean
+build: $(PIP_BIN)
+	${PYTHON_BIN} setup.py sdist
+
 clean:
-	git clean -dxf dist build
+	rm -rf .venv dist
