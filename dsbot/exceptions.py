@@ -45,9 +45,12 @@ channel_errors = {
 }
 
 
-def cast_slack_exception(exception):
+def cast_slack_exception(exception: SlackApiError, **kwargs):
     if exception.response.data["error"] in channel_errors:
-        return channel_errors[exception.response.data["error"]]
+        raise channel_errors[exception.response.data["error"]](
+            response=exception.response, **kwargs
+        ) from exception
+    raise exception
 
 
 class SlackException(BaseException):

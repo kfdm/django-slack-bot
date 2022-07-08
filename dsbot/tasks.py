@@ -27,8 +27,4 @@ def api_call(*args, **kwargs):
     try:
         return client.api_call(*args, json=kwargs).data
     except exceptions.SlackApiError as e:
-        error_class = exceptions.cast_slack_exception(e)
-        if error_class:
-            raise error_class(e.response, **kwargs) from e
-
-        raise
+        exceptions.cast_slack_exception(e, **kwargs)
