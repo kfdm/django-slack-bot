@@ -50,3 +50,5 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+SLACK_TOKEN = "dummy"
