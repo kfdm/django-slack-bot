@@ -27,12 +27,4 @@ def api_call(*args, **kwargs):
     try:
         return client.api_call(*args, json=kwargs).data
     except exceptions.SlackApiError as e:
-        if e.response.data["error"] == "channel_not_found":
-            raise exceptions.ChannelNotFound(
-                kwargs.get("channel", "Unknown"), e.response
-            ) from e
-        if e.response.data["error"] == "is_archived":
-            raise exceptions.ArchiveException(
-                kwargs.get("channel", "Unknown"), e.response
-            ) from e
-        raise
+        exceptions.cast_slack_exception(e, **kwargs)
