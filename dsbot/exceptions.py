@@ -16,12 +16,38 @@ class ArgumentError(CommandError):
 # Custom slack exceptions
 
 
-class ArchiveException(SlackApiError):
+class ChannelError(SlackApiError):
+    def __init__(self, response, **kwargs):
+        self.channel = kwargs.get("channel", "Unknown")
+        super().__init__(
+            f"{response.data['error']} for {self.channel}",
+            response,
+        )
+
+
+class NotInChannel(ChannelError):
     pass
 
 
-class ChannelNotFound(SlackApiError):
+class ArchiveException(ChannelError):
     pass
+
+
+class ChannelNotFound(ChannelError):
+    pass
+
+
+# https://api.slack.com/methods/chat.postMessage#errors
+channel_errors = {
+    "channel_not_found": ChannelNotFound,
+    "not_in_channel": NotInChannel,
+    "is_archived": ArchiveException,
+}
+
+
+def cast_slack_exception(exception):
+    if exception.response.data["error"] in channel_errors:
+        return channel_errors[exception.response.data["error"]]
 
 
 class SlackException(BaseException):
