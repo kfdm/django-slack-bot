@@ -1,6 +1,7 @@
 APP_BIN := .venv/bin/django-admin
 PIP_BIN := .venv/bin/pip
 PYTHON_BIN := .venv/bin/python
+TWINE_BIN := .venv/bin/twine
 
 .PHONY:	test build check clean
 .DEFAULT: test
@@ -14,8 +15,13 @@ $(PIP_BIN):
 ${APP_BIN}: $(PIP_BIN)
 	${PIP_BIN} install -e .
 
-build: $(PIP_BIN)
-	${PYTHON_BIN} setup.py sdist
+${TWINE_BIN}: $(PIP_BIN)
+	$(PIP_BIN) install wheel twine
+
+.PHONY: build
+build: $(TWINE_BIN)
+	$(PYTHON_BIN) setup.py sdist bdist_wheel
+	$(TWINE_BIN) check dist/*
 
 clean:
 	rm -rf .venv dist
