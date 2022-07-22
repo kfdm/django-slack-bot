@@ -39,8 +39,20 @@ def celery_api_call(*args, **kwargs):
 
 
 class CeleryClient(WebClient):
+    task_kwargs = False
+
     def api_call(self, *args, **kwargs):
-        return celery_api_call.delay(*args, **kwargs).get()
+        if self.task_kwargs is False:
+            return celery_api_call.delay(*args, **kwargs).forget()
+        else:
+            return celery_api_call.delay(*args, **kwargs).get(**self.task_kwargs)
+
+    def __enter__(self) -> "CeleryClient":
+        self.task_kwargs = {}
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.task_kwargs = False
 
 
 client = CeleryClient(token=settings.SLACK_TOKEN)
