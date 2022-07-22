@@ -33,9 +33,11 @@ def api_call(*args, **kwargs):
 @shared_task(rate_limit=TASK_RATE_LIMIT)
 def celery_api_call(*args, **kwargs):
     try:
-        return default_client.api_call(*args, **kwargs).data
+        result = default_client.api_call(*args, **kwargs)
     except exceptions.SlackApiError as e:
         exceptions.cast_slack_exception(e, **kwargs)
+    else:
+        return result.data
 
 
 class CeleryClient(WebClient):
