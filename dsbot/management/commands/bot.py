@@ -1,10 +1,10 @@
 import logging
 
-from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.test import override_settings
 
 from dsbot.client import BotClient
+from dsbot.config import settings
 
 try:
     from importlib.metadata import entry_points
