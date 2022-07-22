@@ -9,7 +9,7 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-client = WebClient(token=settings.SLACK_TOKEN)
+default_client = WebClient(token=settings.SLACK_TOKEN)
 
 
 # Since we typically deploy 2 workers and we don't want to go too
@@ -25,6 +25,22 @@ TASK_RATE_LIMIT = getattr(settings, "SLACK_RATE_LIMIT", 0.5)
 @shared_task(rate_limit=TASK_RATE_LIMIT)
 def api_call(*args, **kwargs):
     try:
-        return client.api_call(*args, json=kwargs).data
+        return default_client.api_call(*args, json=kwargs).data
     except exceptions.SlackApiError as e:
         exceptions.cast_slack_exception(e, **kwargs)
+
+
+@shared_task(rate_limit=TASK_RATE_LIMIT)
+def celery_api_call(*args, **kwargs):
+    try:
+        return default_client.api_call(*args, **kwargs).data
+    except exceptions.SlackApiError as e:
+        exceptions.cast_slack_exception(e, **kwargs)
+
+
+class CeleryClient(WebClient):
+    def api_call(self, *args, **kwargs):
+        return celery_api_call.delay(*args, **kwargs).get()
+
+
+client = CeleryClient(token=settings.SLACK_TOKEN)
