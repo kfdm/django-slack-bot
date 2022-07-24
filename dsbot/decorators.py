@@ -1,10 +1,12 @@
 import logging
 from functools import wraps
 
+from dsbot.conf import settings
+
 logger = logging.getLogger(__name__)
 
 
-def ignore_users(ignore_user_list):
+def ignore_users(ignore_user_list=settings.SLACK_IGNORE_USERS):
     def _outer(func):
         @wraps(func)
         def _inner(*args, data, **kwargs):
