@@ -8,12 +8,12 @@ class TestUtilPackage(TestCase):
         result = util.parse_links(
             """
         Test Text
-        <https://example.com>\r\n<https://another.example.com>
+        <https://example.com?one=1&amp;two=2>\r\n<https://another.example.com>
         Again
         """
         )
         self.assertEqual(
-            list(result), ["https://example.com", "https://another.example.com"]
+            list(result), ["https://example.com?one=1&two=2", "https://another.example.com"]
         )
 
     def test_direct_message(self):
