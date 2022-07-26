@@ -1,3 +1,10 @@
+# v0.8.0 - 2022-07-26
+
+- [BUGFIX] Ensure links are unescaped when returned from text processing #6
+- [BUGFIX] Fix reference to settings
+- [IMPROVEMENT] Add a settings wrapper to simplify and better document settings #5
+- [IMPROVEMENT] ignore_bots and ignore_users decorators #3
+
 # v0.7.0 - 2022-07-08
 
 - [IMPROVEMENT] Add initial test cases #1

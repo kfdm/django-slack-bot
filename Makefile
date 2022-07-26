@@ -25,3 +25,7 @@ build: $(TWINE_BIN)
 
 clean:
 	rm -rf .venv dist
+
+.PHONY: changelog
+changelog:
+	git log --color=always --first-parent --pretty='format:%s|%Cgreen%d%Creset'  | column -ts '|'
