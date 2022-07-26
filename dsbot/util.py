@@ -1,5 +1,6 @@
 import logging
 import re
+from html import unescape
 
 MENTION_REGEX = re.compile("^<@(|[WU].+?)>(.*)")
 LINK_REGEX = re.compile(r"<(http.*?)(\|.*?)?>", re.DOTALL)
@@ -22,4 +23,5 @@ def parse_direct_mention(message_text):
 def parse_links(message_text):
     for m in LINK_REGEX.findall(message_text):
         logger.debug("Found match %s", m)
-        yield m[0]
+        # Links in text sometimes have their enti
+        yield unescape(m[0])
