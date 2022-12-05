@@ -1,8 +1,8 @@
 from celery import shared_task
-from slack_sdk.web.client import WebClient
 
 from dsbot import exceptions
 from dsbot.conf import settings
+from dsbot.client.web import WebClient
 
 client = WebClient(token=settings.SLACK_TOKEN)
 
