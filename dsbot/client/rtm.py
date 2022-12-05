@@ -18,7 +18,7 @@ import re
 import slack_sdk.rtm
 import slack_sdk.web
 
-from .exceptions import CommandError
+from ..exceptions import CommandError
 
 logger = logging.getLogger(__name__)
 
