@@ -16,6 +16,7 @@ import re
 
 import slack_sdk.rtm
 
+from dsbot.client.web import WebClient
 from dsbot.exceptions import CommandError
 
 logger = logging.getLogger(__name__)
@@ -24,6 +25,20 @@ logger = logging.getLogger(__name__)
 class BotClient(slack_sdk.rtm.RTMClient):
     user_id = None
     _commands = []
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._web_client = WebClient(
+            token=self.token,
+            base_url=self.base_url,
+            timeout=self.timeout,
+            ssl=self.ssl,
+            proxy=self.proxy,
+            run_async=self.run_async,
+            loop=self._event_loop,
+            session=self._session,
+            headers=self.headers,
+        )
 
     @classmethod
     def cmd(cls, key):
