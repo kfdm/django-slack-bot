@@ -1,3 +1,7 @@
+# v0.8.1 - 2023-07-02
+
+- [BUGFIX] Swap import order #9
+
 # v0.8.0 - 2022-07-26
 
 - [BUGFIX] Ensure links are unescaped when returned from text processing #6
