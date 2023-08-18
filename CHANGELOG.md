@@ -1,3 +1,7 @@
+# v0.9.0 - 2023-08-18
+
+- [IMPROVEMENT] Add initial test bot implementation #11
+
 # v0.8.1 - 2023-07-02
 
 - [BUGFIX] Swap import order #9
