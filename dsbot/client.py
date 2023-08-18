@@ -18,6 +18,11 @@ import re
 import slack_sdk.rtm
 import slack_sdk.web
 
+try:
+    from importlib_metadata import entry_points
+except ImportError:
+    from importlib.metadata import entry_points
+
 from .exceptions import CommandError
 
 logger = logging.getLogger(__name__)
@@ -109,3 +114,13 @@ class BotClient(slack_sdk.rtm.RTMClient):
                 pass
 
             future.result()
+
+    @classmethod
+    def load_plugins(cls, group="dsbot.commands"):
+        for entry in entry_points(group=group):
+            try:
+                entry.load()
+            except ImportError:
+                logger.exception("Error loading %s", entry)
+            else:
+                logger.info("Loaded %s", entry)

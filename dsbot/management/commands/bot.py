@@ -6,11 +6,6 @@ from django.test import override_settings
 from dsbot.client import BotClient
 from dsbot.conf import settings
 
-try:
-    from importlib_metadata import entry_points
-except ImportError:
-    from importlib.metadata import entry_points
-
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
@@ -38,13 +33,7 @@ class Command(BaseCommand):
 
         logging.root.addHandler(ch)
 
-        for entry in entry_points(group="dsbot.commands"):
-            try:
-                entry.load()
-            except ImportError:
-                logging.exception("Error loading %s", entry)
-            else:
-                logging.info("Loaded %s", entry)
+        BotClient.load_plugins()
 
         with override_settings(CELERY_TASK_ALWAYS_EAGER=eager):
             BotClient(
