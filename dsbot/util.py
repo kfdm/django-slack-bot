@@ -25,3 +25,23 @@ def parse_links(message_text):
         logger.debug("Found match %s", m)
         # Links in text sometimes have their enti
         yield unescape(m[0])
+
+
+def is_bot(message) -> bool:
+    return all(
+        (
+            "bot_id" in message,
+            "bot_profile" in message,
+            "user" in message,
+        )
+    )
+
+
+def is_workflow(message) -> bool:
+    return all(
+        (
+            message.get("subtype", "") == "bot_message",
+            "bot_id" in message,
+            "user" not in message,
+        )
+    )
