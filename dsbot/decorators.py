@@ -4,6 +4,7 @@ from functools import wraps
 from dsbot.conf import settings
 from slack.errors import SlackApiError
 from .exceptions import channel_errors
+from dsbot import util
 
 logger = logging.getLogger(__name__)
 
@@ -25,15 +26,24 @@ def ignore_users(ignore_user_list=settings.SLACK_IGNORE_USERS):
 def ignore_bots(func):
     @wraps(func)
     def _inner(*args, data, **kwargs):
-        subtype = data.get("subtype", "")
-        if subtype not in ["bot_message", ""]:
-            # https://api.slack.com/events/message/bot_message
-            # We only care about bot_message or message without a subtype
-            logger.debug("Skipping bot message %s", subtype)
+        if util.is_bot(data):
+            logger.debug("Skipping bot message %s", data)
         else:
             return func(*args, data=data, **kwargs)
 
     return _inner
+
+
+def ignore_subtype(func):
+    @wraps(func)
+    def __inner(*args, message, **kwargs):
+        if subtype := message.get("subtype", None):
+            logger.debug("%s skips subtype message %s", func, subtype)
+        else:
+            return func(*args, message=message, **kwargs)
+
+    return __inner
+
 
 def api_error(func):
     @wraps(func)
