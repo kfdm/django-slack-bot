@@ -2,6 +2,8 @@ import logging
 from functools import wraps
 
 from dsbot.conf import settings
+from slack.errors import SlackApiError
+from .exceptions import channel_errors
 
 logger = logging.getLogger(__name__)
 
@@ -32,3 +34,17 @@ def ignore_bots(func):
             return func(*args, data=data, **kwargs)
 
     return _inner
+
+def api_error(func):
+    @wraps(func)
+    def __inner(*args, **kwargs):
+        try:
+            func(*args, **kwargs)
+        except SlackApiError as e:
+            if e.response.data["error"] in channel_errors:
+                raise channel_errors[e.response.data["error"]](
+                    response=e.response, **kwargs
+                ) from e
+            raise e
+
+    return __inner
