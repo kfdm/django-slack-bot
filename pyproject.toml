@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django_slack_bot"
+version = "0.9.0"
+description = "Helpers for integrating Slack + Django"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: Django",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+]
+dependencies = [
+    "Django>=3.2",
+    "aiohttp",
+    "celery",
+    "slack-sdk>=3.5.1",
+    'importlib-metadata>=1.0 ;python_version < "3.10"',
+]
+
+[[project.authors]]
+name = "Paul Traylor"
+
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+
+[project.scripts]
+example-bot = "dsbot.example.manage:main[example]"
+[project.entry-points."dsbot.commands"]
+defaults = "dsbot.commands.default"
