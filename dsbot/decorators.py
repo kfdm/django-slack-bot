@@ -1,10 +1,12 @@
 import logging
 from functools import wraps
 
-from dsbot.conf import settings
 from slack.errors import SlackApiError
-from .exceptions import channel_errors
+
 from dsbot import util
+from dsbot.conf import settings
+
+from .exceptions import channel_errors
 
 logger = logging.getLogger(__name__)
 
@@ -52,9 +54,7 @@ def api_error(func):
             func(*args, **kwargs)
         except SlackApiError as e:
             if e.response.data["error"] in channel_errors:
-                raise channel_errors[e.response.data["error"]](
-                    response=e.response, **kwargs
-                ) from e
+                raise channel_errors[e.response.data["error"]](response=e.response, **kwargs) from e
             raise e
 
     return __inner
