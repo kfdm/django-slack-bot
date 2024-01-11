@@ -27,7 +27,7 @@ build: $(TWINE_BIN)
 	$(TWINE_BIN) check dist/*
 
 clean:
-	rm -rf .venv dist
+	rm -rf .venv dist dist
 
 .PHONY: changelog
 changelog:

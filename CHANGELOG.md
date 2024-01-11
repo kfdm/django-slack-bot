@@ -1,3 +1,8 @@
+# v0.9.0 - 2024-01-11
+
+- [IMPROVEMENT] Replace RTM Bot with SocketModeAdapter #14
+- [INTERNAL] Migrate to pyproject.toml
+
 # v0.9.0 - 2023-08-18
 
 - [IMPROVEMENT] Add initial test bot implementation #11
