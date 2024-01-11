@@ -6,7 +6,7 @@ from slack.errors import SlackApiError
 from dsbot import util
 from dsbot.conf import settings
 
-from .exceptions import channel_errors
+from .exceptions import CommandError, channel_errors
 
 logger = logging.getLogger(__name__)
 
@@ -58,3 +58,40 @@ def api_error(func):
             raise e
 
     return __inner
+
+
+def command(func):
+    @wraps(func)
+    def _inner(*args, client, message, **kwargs):
+        try:
+            func(*args, client=client, message=message, **kwargs)
+        except CommandError as e:
+            logger.warning("Command Error")
+            return client.web_client.chat_postEphemeral(
+                as_user=True,
+                channel=message["channel"],
+                user=message["user"],
+                attachments=[
+                    {
+                        "color": "warning",
+                        "title": "Command Error",
+                        "text": str(e),
+                    }
+                ],
+            )
+        except Exception as e:
+            logger.exception("Unknown Error")
+            return client.web_client.chat_postEphemeral(
+                as_user=True,
+                channel=message["channel"],
+                user=message["user"],
+                attachments=[
+                    {
+                        "color": "danger",
+                        "title": "Unknown Error",
+                        "text": str(e),
+                    }
+                ],
+            )
+
+    return _inner
