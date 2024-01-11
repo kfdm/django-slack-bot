@@ -106,9 +106,7 @@ class BotClient(slack_sdk.rtm.RTMClient):
             headers=self.headers,
         )
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-            future = executor.submit(
-                callback, rtm_client=self, web_client=web_client, **kwargs
-            )
+            future = executor.submit(callback, rtm_client=self, web_client=web_client, **kwargs)
 
             while future.running():
                 pass

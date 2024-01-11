@@ -24,9 +24,7 @@ async def cmd_help(rtm_client, web_client, data, **kwargs):
     return web_client.chat_postEphemeral(
         channel=data["channel"],
         as_user=True,
-        text=render_to_string(
-            "slack/response/help.txt", {"mapping": rtm_client._commands}
-        ).strip(),
+        text=render_to_string("slack/response/help.txt", {"mapping": rtm_client._commands}).strip(),
         user=data["user"],
     )
 
